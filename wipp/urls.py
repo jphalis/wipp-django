@@ -41,6 +41,8 @@ urlpatterns = [
 
     # General
     url(r'^$', views.home, name='home'),
+    url(r'^accounts/', include('accounts.urls',
+        namespace='accounts')),
 ]
 
 

@@ -65,7 +65,7 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
         app_label = 'accounts'
 
     def __unicode__(self):
-        return u"{}".format(self.id)
+        return u"{} {}".format(self.first_name, self.last_name)
 
     def get_profile_view(self):
         return reverse('profile_view', kwargs={"id": self.id})
@@ -101,15 +101,17 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
 class Driver(TimeStampedModel):
     user = models.OneToOneField(MyUser, related_name='driver')
     is_active = models.BooleanField(_('active'), default=True)
-    rating = models.IntegerField(default=0, null=True)
-    trips_completed = models.IntegerField(default=0, null=True)
+    rating = models.IntegerField(default=0)
+    trips_completed = models.IntegerField(default=0)
 
     class Meta:
         app_label = 'accounts'
 
     def __unicode__(self):
-        return u"{}".format(self.user.id)
+        return u"{} {}".format(self.user.first_name, self.user.last_name)
 
-    @property
     def average_rating(self):
-        return self.rating / self.trips_completed
+        if self.trips_completed > 0:
+            return float("{0:.2f}".format(
+                float(self.rating) / float(self.trips_completed)))
+        return 0

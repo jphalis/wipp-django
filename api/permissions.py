@@ -10,7 +10,7 @@ class MyUserIsOwnerOrReadOnly(permissions.BasePermission):
         return obj.id == request.user.id
 
 
-class IsOwnerOrReadOnly(permissions.BasePermission):
+class IsDriverOrReadOnly(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:
             return True

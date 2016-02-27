@@ -9,16 +9,17 @@ from rest_framework.reverse import reverse as api_reverse
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
-from accounts.models import MyUser
+from accounts.models import Driver, MyUser
 from core.mixins import AdminRequiredMixin, CacheMixin
 from reservations.models import Reservation
-from .account_serializers import AccountCreateSerializer, MyUserSerializer
+from .account_serializers import (AccountCreateSerializer, DriverSerializer,
+                                  MyUserSerializer)
 from .auth_serializers import (PasswordResetSerializer,
                                PasswordResetConfirmSerializer,
                                PasswordChangeSerializer)
 from .mixins import DefaultsMixin, FiltersMixin
 from .pagination import AccountPagination, ReservationPagination
-from .permissions import IsOwnerOrReadOnly, MyUserIsOwnerOrReadOnly
+from .permissions import IsDriverOrReadOnly, MyUserIsOwnerOrReadOnly
 from .reservation_serializers import ReservationSerializer
 
 # Create your views here.
@@ -41,9 +42,12 @@ class APIHomeView(AdminRequiredMixin, CacheMixin, DefaultsMixin, APIView):
                 'url': api_reverse('user_account_list_api', request=request),
                 'create_url': api_reverse('account_create_api',
                                           request=request),
-                'edit_profile_url': api_reverse(
+                'profile_url': api_reverse(
                     'user_account_detail_api', request=request,
-                    kwargs={'username': request.user.username})
+                    kwargs={'id': request.user.id}),
+                'driver_url': api_reverse(
+                    'user_driver_detail_api', request=request,
+                    kwargs={'id': request.user.id})
             },
             'reservations': {
                 'count': Reservation.objects.all().count(),
@@ -81,8 +85,32 @@ class MyUserDetailAPIView(CacheMixin,
     parser_classes = (MultiPartParser, FormParser,)
 
     def get_object(self):
-        username = self.kwargs["username"]
-        obj = get_object_or_404(MyUser, username=username)
+        user_id = self.kwargs["id"]
+        obj = get_object_or_404(MyUser, id=user_id)
+        return obj
+
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+
+class DriverDetailAPIView(CacheMixin,
+                          generics.RetrieveAPIView,
+                          mixins.DestroyModelMixin,
+                          mixins.UpdateModelMixin):
+    cache_timeout = 60 * 5
+    permission_classes = (
+        permissions.IsAuthenticated,
+        IsDriverOrReadOnly,
+    )
+    serializer_class = DriverSerializer
+    parser_classes = (MultiPartParser, FormParser,)
+
+    def get_object(self):
+        user_id = self.kwargs["id"]
+        obj = get_object_or_404(Driver, id=user_id)
         return obj
 
     def delete(self, request, *args, **kwargs):
@@ -164,7 +192,7 @@ class ReservationListAPIView(CacheMixin, DefaultsMixin, FiltersMixin,
     pagination_class = ReservationPagination
     serializer_class = ReservationSerializer
     queryset = Reservation.objects.select_related('user', 'driver')
-    search_fields = ('user__username',)
+    search_fields = ('user__email, user__get_full_name',)
     ordering_fields = ('created', 'modified',)
 
 

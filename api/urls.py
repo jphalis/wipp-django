@@ -4,7 +4,8 @@ from django.conf.urls import url
 from . import views
 from .views import APIHomeView
 from .views import (AccountCreateAPIView,
-                    MyUserDetailAPIView, MyUserListAPIView)
+                    MyUserDetailAPIView, MyUserListAPIView,
+                    DriverDetailAPIView)
 from .views import (PasswordChangeView, PasswordResetView,
                     PasswordResetConfirmView)
 from .views import ReservationListAPIView
@@ -23,6 +24,8 @@ urlpatterns = [
         name='account_create_api'),
     url(r'^accounts/(?P<id>\d+)/$', MyUserDetailAPIView.as_view(),
         name='user_account_detail_api'),
+    url(r'^accounts/driver/(?P<id>\d+)/$', DriverDetailAPIView.as_view(),
+        name='user_driver_detail_api'),
 
     # A U T H E N T I C A T I O N
     url(r'^password/reset/$', PasswordResetView.as_view(),
