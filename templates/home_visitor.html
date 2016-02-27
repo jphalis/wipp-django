@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h1>Static homepage</h1>
+    {% if request.user.is_authenticated %}
+        <img class="img-rounded" style="height: 10%; width: 10%;" src="{{ profile_picture }}" />
+        <h4>{{ full_name }}</h4>
+        <h4>+1 {{ phone_number }}</h4>
+    {% endif %}
+
+{% endblock content %}
