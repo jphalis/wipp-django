@@ -63,6 +63,11 @@ DATABASES = {
 }
 DATABASES['default'] = dj_database_url.config()  # Heroku
 DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql_psycopg2'
+DATABASES['default']['NAME'] = 'd7nvtivsu7jeah'
+DATABASES['default']['USER'] = 'lozwrsdudriegz'
+DATABASES['default']['PASSWORD'] = 'phpQXg1yIWUwGxblscYa0p89Jr'
+DATABASES['default']['HOST'] = 'ec2-23-21-42-29.compute-1.amazonaws.com'
+DATABASES['default']['PORT'] = '5432'
 # Change 'extra' to 'default' if you move to AWS or other
 
 
