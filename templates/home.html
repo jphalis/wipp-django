@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+
+    <div class="home-container">
+        <h1>Welcome to Wipp!</h1>
+        {% if request.user.is_authenticated %}
+            <img class="img-rounded" style="height: 10%; width: 10%;" src="{{ profile_picture }}" />
+            <h4>{{ full_name }}</h4>
+            <h4>{{ phone_number }}</h4>
+        {% endif %}
+        {% if request.user.is_superuser or request.user.is_admin %}
+            <br/><br/>
+            <a href="http://{{ domain }}/hidden/secure/wipp/admin"><h3>ADMIN</h3></a>
+            <br/>
+            <a href="http://{{ domain }}/hidden/secure/wipp/api"><h3>API</h3></a>
+        {% endif %}
+    </div>
+
+{% endblock content %}
