@@ -62,6 +62,7 @@ DATABASES = {
     }
 }
 DATABASES['default'] = dj_database_url.config()  # Heroku
+DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql_psycopg2'
 # Change 'extra' to 'default' if you move to AWS or other
 
 
