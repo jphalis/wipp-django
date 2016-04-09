@@ -50,10 +50,10 @@ INSTALLED_APPS += (
 DATABASES = {
     'default': {  # get credentials from Heroku database creation
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'dde0gbogoher3t',
-        'USER': 'fvztosesosyxdc',
-        'PASSWORD': 'z1JX70ezy_lWBDd1p-VzUJjbTP',
-        'HOST': 'ec2-54-235-153-179.compute-1.amazonaws.com',
+        'NAME': 'd7nvtivsu7jeah',
+        'USER': 'lozwrsdudriegz',
+        'PASSWORD': 'phpQXg1yIWUwGxblscYa0p89Jr',
+        'HOST': 'ec2-23-21-42-29.compute-1.amazonaws.com',
         'PORT': '5432',
     },
     'extra': {

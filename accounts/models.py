@@ -135,7 +135,7 @@ class Driver(TimeStampedModel):
         (FAIR, _('Fair')),
         (POOR, _('Poor')),
     )
-    user = models.OneToOneField(settings.AUTH_USER_MODEL)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='user')
     is_active = models.BooleanField(_('active'), default=True)
     car_make = models.CharField(max_length=30, blank=True)
     car_model = models.CharField(max_length=30, blank=True)

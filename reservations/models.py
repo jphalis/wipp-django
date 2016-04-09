@@ -46,7 +46,8 @@ class Reservation(TimeStampedModel):
         choices=RESERVATION_STATUSES, default=PENDING)
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     # driver = models.ForeignKey(Driver, null=True, blank=True)
-    driver = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True)
+    driver = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True,
+                               related_name='driver')
     pick_up_interval = models.CharField(max_length=21, default="now")
     start_amount = models.DecimalField(max_digits=18, decimal_places=2,
                                        default=0.00)
