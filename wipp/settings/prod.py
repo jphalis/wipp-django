@@ -14,7 +14,7 @@ ALLOWED_HOSTS = [
     'domain.com',
     '*.domain.com',
     '127.0.0.1',
-    'secret-refuge-87026.herokuapp.com',
+    'pure-shelf-18585.herokuapp.com',
 ]
 CORS_URLS_REGEX = r'^/hidden/secure/wipp/api/.*$'
 
