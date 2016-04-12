@@ -16,7 +16,7 @@ from core.models import TimeStampedModel
 class ReservationManager(models.Manager):
     def pending(self):
         return super(ReservationManager, self).get_queryset() \
-            .filter() \
+            .filter(reservation_status=Reservation.PENDING) \
             .select_related('user')
 
     def own_user(self, user):
