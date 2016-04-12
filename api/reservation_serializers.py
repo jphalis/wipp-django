@@ -10,24 +10,29 @@ class ReservationSerializer(serializers.HyperlinkedModelSerializer):
     user_url = serializers.SerializerMethodField()
     user_phone_number = serializers.CharField(
         source='user.phone_number', read_only=True)
+    user_profile_pic = serializers.ImageField(source='user.profile_picture')
     driver = serializers.CharField(source='driver.full_name',
                                    read_only=True)
     driver_id = serializers.CharField(source='driver.id', read_only=True)
     driver_url = serializers.SerializerMethodField()
     driver_phone_number = serializers.CharField(
         source='driver.phone_number', read_only=True)
-    destination_address = serializers.CharField(source='address_from_query')
+    driver_profile_pic = serializers.ImageField(
+        source='driver.profile_picture')
+    # destination_address = serializers.CharField(source='address_from_query')
 
     class Meta:
         model = Reservation
         fields = ('id', 'reservation_url', 'user', 'user_url',
-                  'user_phone_number', 'driver', 'driver_url', 'driver_id',
-                  'driver_phone_number', 'status_verbose',
+                  'user_phone_number', 'user_profile_pic', 'driver',
+                  'driver_url', 'driver_id', 'driver_phone_number',
+                  'driver_profile_pic', 'status_verbose',
                   'pick_up_interval', 'start_amount', 'final_amount',
                   'start_query', 'destination_query', 'start_long',
-                  'start_lat', 'end_long', 'end_lat', 'start_address',
-                  'destination_address', 'travel_distance',
-                  'created', 'modified',)
+                  'start_lat', 'end_long', 'end_lat', 'travel_distance',
+                  'created', 'modified',
+                  # 'start_address', 'destination_address',
+                  )
 
     def get_reservation_url(self, obj):
         return api_reverse('reservation_detail_api',
