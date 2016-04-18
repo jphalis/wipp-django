@@ -25,7 +25,7 @@ class MyUserAdmin(UserAdmin):
             {'fields': ('full_name', 'phone_number', 'profile_picture',)}),
         ('Permissions',
             {'fields': ('is_active', 'is_confirmed', 'is_admin',
-                        'user_permissions')}),
+                        'is_superuser', 'user_permissions')}),
         (_('Dates'),
             {'fields': ('date_joined', 'last_login', 'modified',)}),
     )
