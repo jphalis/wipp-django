@@ -278,7 +278,7 @@ class ReservationListAPIView(CacheMixin, DefaultsMixin, FiltersMixin,
     cache_timeout = 60 * 60 * 24
     pagination_class = ReservationPagination
     serializer_class = ReservationSerializer
-    queryset = Reservation.objects.pending().select_related('user', 'driver')
+    # queryset = Reservation.objects.pending().select_related('user', 'driver')
     search_fields = ('user__email, user__get_full_name',)
     ordering_fields = ('created', 'modified',)
 
