@@ -268,9 +268,9 @@ class ReservationCreateAPIView(ModelViewSet):
         # The user has not confirmed his/her account
         else:
             raise ValidationError(
-                    {"error_message":
-                     "Please confirm your account before continuing. "
-                     "You should have received an email from us."})
+                {"error_message":
+                 "Please confirm your account before continuing. "
+                 "You should have received an email from us."})
 
 
 class ReservationListAPIView(CacheMixin, DefaultsMixin, FiltersMixin,
@@ -278,7 +278,6 @@ class ReservationListAPIView(CacheMixin, DefaultsMixin, FiltersMixin,
     cache_timeout = 60 * 60 * 24
     pagination_class = ReservationPagination
     serializer_class = ReservationSerializer
-    # queryset = Reservation.objects.pending().select_related('user', 'driver')
     search_fields = ('user__email, user__get_full_name',)
     ordering_fields = ('created', 'modified',)
 
@@ -297,13 +296,6 @@ class ReservationListAPIView(CacheMixin, DefaultsMixin, FiltersMixin,
             queryset = Reservation.objects.pending().select_related(
                 'user', 'driver')
         return queryset
-
-    # def list(self, request):
-    #     queryset = self.get_queryset()
-    #     serializer = ReservationSerializer(queryset, many=True)
-    #     if queryset:
-    #         return RestResponse({'detail': serializer.data})
-    #     return RestResponse({'detail': 'There are no rides at this time.'})
 
 
 class ReservationDetailAPIView(CacheMixin,
