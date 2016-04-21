@@ -217,7 +217,7 @@ class ReservationCreateAPIView(ModelViewSet):
                 start_coordinates = None
 
             # There is a start query...
-            if start_query:
+            if start_query and not start_coordinates:
                 start_adrs = geolocator.geocode(start_query, timeout=60)
                 if start_adrs and start_adrs.latitude and start_adrs.longitude:
                     start_loc = (start_adrs.latitude, start_adrs.longitude)
@@ -229,9 +229,9 @@ class ReservationCreateAPIView(ModelViewSet):
             # Something went wrong...
             else:
                 raise ValidationError(
-                        {"error_message":
-                         "There was a problem creating your request. "
-                         "Please try again later."})
+                    {"error_message":
+                     "There was a problem creating your request. "
+                     "Please try again later."})
 
             # Get the formal address for the destination query
             destination_query = self.request.data.get('destination_query')
