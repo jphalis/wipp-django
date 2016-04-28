@@ -14,14 +14,6 @@ class DefaultsMixin(object):
     permission_classes = (
         permissions.IsAuthenticated,
     )
-    # paginate_by = 18
-    # paginate_by_param = 'page_size'
-    # max_paginate_by = 100
-    # filter_backends = (
-    #     filters.DjangoFilterBackend,
-    #     filters.SearchFilter,
-    #     filters.OrderingFilter,
-    # )
 
 
 class FiltersMixin(object):

@@ -106,7 +106,7 @@ class UserChangeForm(forms.ModelForm):
 class RegisterForm(forms.Form):
     email = forms.EmailField(max_length=80,
                              widget=forms.widgets.EmailInput(
-                                attrs={'placeholder': 'Email'}))
+                                 attrs={'placeholder': 'Email'}))
     password1 = forms.CharField(label='Create password',
                                 widget=forms.PasswordInput(
                                     attrs={'placeholder': 'Password'}))
@@ -154,9 +154,9 @@ class RegisterForm(forms.Form):
 class LoginForm(forms.Form):
     email = forms.CharField(label="Email",
                             widget=forms.widgets.TextInput(
-                                    attrs={'placeholder': 'Email'}))
-    password = forms.CharField(widget=forms.PasswordInput(
-                                    attrs={'placeholder': 'Password'}))
+                                attrs={'placeholder': 'Email'}))
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={'placeholder': 'Password'}))
 
     def clean_email(self):
         """
@@ -171,7 +171,7 @@ class AccountBasicsChangeForm(forms.ModelForm):
     email = forms.EmailField(widget=forms.EmailInput(), max_length=80)
     profile_picture = forms.ImageField(required=False,
                                        widget=ClearableFileInput(
-                                            attrs={'class': 'form-control'}))
+                                           attrs={'class': 'form-control'}))
 
     class Meta:
         model = MyUser
@@ -313,7 +313,7 @@ class PasswordChangeForm(forms.Form):
     """
     old_password = forms.CharField(label=_("Old password"),
                                    widget=forms.PasswordInput(
-                                    attrs={'placeholder': 'Old password'}))
+                                       attrs={'placeholder': 'Old password'}))
     password1 = forms.CharField(label='New password',
                                 widget=forms.PasswordInput(
                                     attrs={'placeholder': 'New password'}))

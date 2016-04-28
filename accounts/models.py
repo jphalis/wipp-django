@@ -64,6 +64,7 @@ class MyUser(AbstractBaseUser, PermissionsMixin):
     # phone_number = PhoneNumberField(
     #     blank=True, help_text='When saving, format must be +1XXXXXXXXXX')
     phone_number = models.CharField(max_length=18, blank=True)
+    university = models.CharField(max_length=180, blank=True)
     is_active = models.BooleanField(_('active'), default=True)
     is_admin = models.BooleanField(_('admin'), default=False)
     is_confirmed = models.BooleanField(_('confirmed'), default=False)

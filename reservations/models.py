@@ -50,6 +50,9 @@ class Reservation(TimeStampedModel):
     # driver = models.ForeignKey(Driver, null=True, blank=True)
     driver = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True,
                                related_name='driver')
+    pending_drivers = models.ManyToManyField(settings.AUTH_USER_MODEL,
+                                             related_name='pending_drivers',
+                                             blank=True)
     pick_up_interval = models.CharField(max_length=21, default="now")
     start_amount = models.DecimalField(max_digits=18, decimal_places=2,
                                        default=0.00)
@@ -71,6 +74,11 @@ class Reservation(TimeStampedModel):
 
     def __unicode__(self):
         return u"{}".format(self.user.id)
+
+    @cached_property
+    def get_pending_drivers_info(self):
+        return self.pending_drivers.values(
+            'email', 'full_name', 'phone_number', 'profile_picture')
 
     @cached_property
     def net_change_amount(self):
