@@ -323,12 +323,43 @@ class ReservationDetailAPIView(CacheMixin,
         return self.update(request, *args, **kwargs)
 
 
+# class ReservationDriversListAPIView(CacheMixin, DefaultsMixin, FiltersMixin,
+#                                     generics.ListAPIView):
+#     cache_timeout = 60
+#     serializer_class = ReservationSerializer
+#     search_fields = ('user__email, user__get_full_name',)
+#     ordering_fields = ('created', 'modified',)
+
+#     def get_queryset(self):
+#         user = self.request.user
+
+#         queryset = Reservation.objects.get(
+#             user=user, reservation_status=Reservation.PENDING) \
+#             .values('pending_drivers')
+#         return queryset
+
+#     def list(self, request):
+#         queryset = self.get_queryset()
+#         serializer = ReservationSerializer(queryset, many=True)
+#         return RestResponse({serializer.data})
+
+
 @api_view(['POST'])
 def reservation_accept_api(request, reservation_id):
-    # driver = Driver.objects.get(user=request.user)
     reservation = Reservation.objects.get(id=reservation_id)
+    reservation.pending_drivers.add(request.user)
+    reservation.reservation_status = Reservation.SELECT
+    reservation.save()
+    serializer = ReservationSerializer(reservation,
+                                       context={'request': request})
+    return RestResponse(serializer.data, status=status.HTTP_201_CREATED)
+
+
+@api_view(['POST'])
+def reservation_driver_found_api(request, reservation_id, driver_id):
+    reservation = Reservation.objects.get(id=reservation_id)
+    reservation.driver = MyUser.objects.get(id=driver_id)
     reservation.reservation_status = Reservation.ACCEPTED
-    reservation.driver = request.user  # driver
     reservation.save()
     serializer = ReservationSerializer(reservation,
                                        context={'request': request})

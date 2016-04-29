@@ -5,6 +5,7 @@ from geopy.geocoders import Nominatim
 
 from django.conf import settings
 from django.db import models
+from django.db.models import Q
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
 
@@ -17,13 +18,15 @@ from core.models import TimeStampedModel
 class ReservationManager(models.Manager):
     def pending(self):
         return super(ReservationManager, self).get_queryset() \
-            .filter(reservation_status=Reservation.PENDING,
+            .filter(Q(reservation_status=Reservation.PENDING) |
+                    Q(reservation_status=Reservation.SELECT),
                     pick_up_interval__lte=datetime.now()) \
             .select_related('user')
 
     def own_user(self, user):
         return super(ReservationManager, self).get_queryset() \
-            .filter(user=user).select_related('user')
+            .filter(user=user).select_related('user') \
+            .prefetch_related('pending_drivers')
 
     def own_driver(self, driver):
         return super(ReservationManager, self).get_queryset() \
@@ -36,6 +39,7 @@ class Reservation(TimeStampedModel):
     ACCEPTED = 2
     COMPLETED = 3
     CANCELED = 4
+    SELECT = 5
 
     RESERVATION_STATUSES = (
         (PENDING, _('Pending...')),
@@ -43,6 +47,7 @@ class Reservation(TimeStampedModel):
         (ACCEPTED, _('Accepted')),
         (COMPLETED, _('Completed')),
         (CANCELED, _('Canceled')),
+        (SELECT, _('Select Driver')),
     )
     reservation_status = models.IntegerField(
         choices=RESERVATION_STATUSES, default=PENDING)
@@ -78,7 +83,7 @@ class Reservation(TimeStampedModel):
     @cached_property
     def get_pending_drivers_info(self):
         return self.pending_drivers.values(
-            'email', 'full_name', 'phone_number', 'profile_picture')
+            'id', 'email', 'full_name', 'phone_number', 'profile_picture')
 
     @cached_property
     def net_change_amount(self):

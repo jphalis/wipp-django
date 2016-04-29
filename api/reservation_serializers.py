@@ -24,7 +24,7 @@ class ReservationSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Reservation
         fields = ('id', 'reservation_url', 'user', 'user_url',
-                  'user_phone_number', 'user_profile_pic', 'driver',
+                  'user_phone_number', 'user_profile_pic', 'get_pending_drivers_info', 'driver',
                   'driver_url', 'driver_id', 'driver_phone_number',
                   'driver_profile_pic', 'status_verbose',
                   'pick_up_interval', 'start_amount', 'final_amount',

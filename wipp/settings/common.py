@@ -5,7 +5,7 @@ import datetime
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-MAX_MILE_DISTANCE = 150  # Maximum distance a trip can be in miles
+MAX_MILE_DISTANCE = 200  # Maximum distance a trip can be in miles
 
 
 # HOSTING + AUTHENTICATION
