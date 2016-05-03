@@ -17,6 +17,10 @@ from core.models import TimeStampedModel
 
 class ReservationManager(models.Manager):
     def pending(self):
+        """
+        Returns all requests with a status of:
+        Pending... or Select Driver.
+        """
         return super(ReservationManager, self).get_queryset() \
             .filter(Q(reservation_status=Reservation.PENDING) |
                     Q(reservation_status=Reservation.SELECT),
@@ -24,11 +28,17 @@ class ReservationManager(models.Manager):
             .select_related('user')
 
     def own_user(self, user):
+        """
+        Returns all requests for the current user.
+        """
         return super(ReservationManager, self).get_queryset() \
             .filter(user=user).select_related('user') \
             .prefetch_related('pending_drivers')
 
     def own_driver(self, driver):
+        """
+        Returns all requests for the current driver.
+        """
         return super(ReservationManager, self).get_queryset() \
             .filter(driver=driver).select_related('driver')
 
@@ -82,6 +92,9 @@ class Reservation(TimeStampedModel):
 
     @cached_property
     def get_pending_drivers_info(self):
+        """
+        Returns the values of the pending drivers for each request.
+        """
         return self.pending_drivers.values(
             'id', 'email', 'full_name', 'phone_number', 'profile_picture')
 
@@ -148,11 +161,17 @@ class Reservation(TimeStampedModel):
         return (location.latitude, location.longitude)
 
     def dist_between_user_driver(self):
+        """
+        Returns the distance between the user and the driver.
+        """
         user_loc = (self.start_lat, self.start_long)
         driver_loc = (self.end_lat, self.end_long)
         return vincenty(user_loc, driver_loc).miles
 
     def travel_distance(self):
+        """
+        Returns the total travel distance for the request.
+        """
         start_loc = (self.start_lat, self.start_long)
         end_loc = (self.end_lat, self.end_long)
         return "{:.2f} miles".format(vincenty(start_loc, end_loc).miles)
