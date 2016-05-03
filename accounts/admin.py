@@ -84,5 +84,5 @@ class DriverAdmin(admin.ModelAdmin):
         queryset.update(is_active=False)
     disable.short_description = _("Disable selected drivers")
 
-admin.site.register(Driver, DriverAdmin)
+# admin.site.register(Driver, DriverAdmin)
 admin.site.unregister(Group)
