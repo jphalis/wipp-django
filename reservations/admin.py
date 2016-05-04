@@ -7,7 +7,7 @@ from .models import Reservation
 
 class ReservationAdmin(admin.ModelAdmin):
     list_display = ['id', 'user', 'driver', 'reservation_status',
-                    'final_amount']
+                    'start_amount']
     list_filter = ['reservation_status']
     search_fields = ['id', 'driver__user__get_full_name',
                      'user__get_full_name']
