@@ -5,6 +5,7 @@ import dj_database_url
 
 # HOSTING + AUTHENTICATION
 ADMINS = (
+    """Uncomment lines below if you want email about server errors."""
     # ("Chris", "c.haralampoudis@gmail.com"),
     # ("Q", "schunkqj@gmail.com"),
 )
