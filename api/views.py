@@ -310,7 +310,7 @@ class ReservationDetailAPIView(CacheMixin,
     def get_object(self):
         reservation_id = self.kwargs["reservation_id"]
         obj = get_object_or_404(Reservation, id=reservation_id)
-        if obj.pick_up_interval > datetime.now():
+        if obj.pick_up_interval < datetime.now():
             obj.reservation_status = Reservation.CANCELED
         return obj
 
