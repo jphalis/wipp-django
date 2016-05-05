@@ -1,11 +1,11 @@
 from __future__ import unicode_literals
+from datetime import datetime
 from geopy.distance import vincenty
 from geopy.geocoders import Nominatim
 
 from django.conf import settings
 from django.db import models
 from django.db.models import Q
-from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
 
@@ -24,7 +24,7 @@ class ReservationManager(models.Manager):
         return super(ReservationManager, self).get_queryset() \
             .filter(Q(reservation_status=Reservation.PENDING) |
                     Q(reservation_status=Reservation.SELECT),
-                    pick_up_interval__gte=timezone.now()) \
+                    pick_up_interval__gte=datetime.now().time()) \
             .select_related('user')
 
     def own_user(self, user):

@@ -1,7 +1,7 @@
+from datetime import datetime
 from geopy.geocoders import Nominatim
 
 from django.shortcuts import get_object_or_404
-from django.utils import timezone
 
 from rest_framework import generics, mixins, permissions, status
 from rest_framework.decorators import api_view
@@ -311,7 +311,7 @@ class ReservationDetailAPIView(CacheMixin,
     def get_object(self):
         reservation_id = self.kwargs["reservation_id"]
         obj = get_object_or_404(Reservation, id=reservation_id)
-        if obj.pick_up_interval < timezone.now().time():
+        if obj.pick_up_interval < datetime.now().time():
             obj.reservation_status = Reservation.CANCELED
             obj.save()
         return obj
