@@ -24,7 +24,7 @@ class ReservationManager(models.Manager):
         return super(ReservationManager, self).get_queryset() \
             .filter(Q(reservation_status=Reservation.PENDING) |
                     Q(reservation_status=Reservation.SELECT),
-                    pick_up_interval__lte=datetime.now()) \
+                    pick_up_interval__gte=datetime.now()) \
             .select_related('user')
 
     def own_user(self, user):
