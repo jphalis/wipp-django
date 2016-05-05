@@ -20,11 +20,13 @@ class ReservationSerializer(serializers.HyperlinkedModelSerializer):
     driver_profile_pic = serializers.ImageField(
         source='driver.profile_picture')
     # destination_address = serializers.CharField(source='address_from_query')
+    pick_up_interval = serializers.SerializerMethodField()
 
     class Meta:
         model = Reservation
         fields = ('id', 'reservation_url', 'user', 'user_url',
-                  'user_phone_number', 'user_profile_pic', 'get_pending_drivers_info', 'driver',
+                  'user_phone_number', 'user_profile_pic',
+                  'get_pending_drivers_info', 'driver',
                   'driver_url', 'driver_id', 'driver_phone_number',
                   'driver_profile_pic', 'status_verbose',
                   'pick_up_interval', 'start_amount', 'final_amount',
@@ -50,6 +52,10 @@ class ReservationSerializer(serializers.HyperlinkedModelSerializer):
                                kwargs={'id': obj.driver.id},
                                request=self.context['request'])
         return None
+
+    def get_pick_up_interval(self, obj):
+        # %l:%M %p (removes leading 0)
+        return obj.pick_up_interval.strftime("%I:%M %p")
 
 
 class ReservationCreateSerializer(serializers.ModelSerializer):
