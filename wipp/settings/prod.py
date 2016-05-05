@@ -2,6 +2,8 @@ from wipp.settings.common import *
 
 import dj_database_url
 
+DEBUG = True
+
 
 # HOSTING + AUTHENTICATION
 ADMINS = (
