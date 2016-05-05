@@ -2,11 +2,13 @@ from wipp.settings.common import *
 
 import dj_database_url
 
+DEBUG = True
+
 
 # HOSTING + AUTHENTICATION
 ADMINS = (
-    ("Chris", "c.haralampoudis@gmail.com"),
-    ("Q", "schunkqj@gmail.com"),
+    # ("Chris", "c.haralampoudis@gmail.com"),
+    # ("Q", "schunkqj@gmail.com"),
 )
 MANAGERS = ADMINS
 ALLOWED_HOSTS = [
