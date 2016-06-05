@@ -1,6 +1,7 @@
 from datetime import datetime
 from geopy.geocoders import Nominatim
 
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
 
 from rest_framework import generics, mixins, permissions, status
@@ -287,7 +288,7 @@ class ReservationListAPIView(CacheMixin, DefaultsMixin, FiltersMixin,
 
         try:
             driver_res = Reservation.objects.get(
-                driver=user, reservation_status=Reservation.ACCEPTED)
+                Q(driver=user) & Q(reservation_status=Reservation.ACCEPTED))
         except:
             driver_res = None
 
