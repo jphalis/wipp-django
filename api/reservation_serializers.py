@@ -62,4 +62,4 @@ class ReservationCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reservation
         fields = ('id', 'pick_up_interval', 'start_amount', 'start_long',
-                  'start_lat', 'destination_query', 'start_query',)
+                  'start_lat', 'start_query', 'destination_query',)

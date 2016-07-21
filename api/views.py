@@ -1,5 +1,4 @@
 from datetime import datetime
-from geopy.geocoders import Nominatim
 
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
@@ -15,7 +14,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from accounts.models import Driver, MyUser
 from core.mixins import AdminRequiredMixin, CacheMixin
-from core.utils import check_dist_between_start_end
+from core.utils import coordinates_from_query, travel_distance
 from reservations.models import Reservation
 from .account_serializers import (AccountCreateSerializer, DriverSerializer,
                                   DriverCreateSerializer, MyUserSerializer)
@@ -202,7 +201,6 @@ class ReservationCreateAPIView(ModelViewSet):
         to see.
         """
         if self.request.user.is_confirmed:
-            geolocator = Nominatim()
             start_loc = None
 
             # Is there a start query?
@@ -215,14 +213,14 @@ class ReservationCreateAPIView(ModelViewSet):
             try:
                 start_coordinates = (self.request.data.get('start_lat'),
                                      self.request.data.get('start_long'))
+                if start_coordinates == ('', ''):
+                    start_coordinates = None
             except:
                 start_coordinates = None
 
             # There is a start query...
             if start_query and not start_coordinates:
-                start_adrs = geolocator.geocode(start_query, timeout=60)
-                if start_adrs and start_adrs.latitude and start_adrs.longitude:
-                    start_loc = (start_adrs.latitude, start_adrs.longitude)
+                start_loc = coordinates_from_query(query=start_query)
 
             # There are starting coordinates...
             elif start_coordinates:
@@ -237,21 +235,25 @@ class ReservationCreateAPIView(ModelViewSet):
 
             # Get the formal address for the destination query
             destination_query = self.request.data.get('destination_query')
-            destination = geolocator.geocode(destination_query, timeout=60)
+            end_loc = coordinates_from_query(query=destination_query)
 
             # There is a destination
-            if destination and destination.latitude and destination.longitude:
-                end_loc = (destination.latitude, destination.longitude)
+            if end_loc:
 
                 # The travel distance is <= to the max amount in settings
-                if check_dist_between_start_end(start_loc, end_loc):
+                if travel_distance(
+                        start_lat=start_loc[0],
+                        start_lng=start_loc[1],
+                        end_lat=end_loc[0],
+                        end_lng=end_loc[1]):
+
                     serializer.save(user=self.request.user,
                                     reservation_status=Reservation.PENDING,
                                     start_lat=start_loc[0],
                                     start_long=start_loc[1],
                                     destination_query=destination_query,
-                                    end_long=destination.longitude,
-                                    end_lat=destination.latitude)
+                                    end_long=end_loc[0],
+                                    end_lat=end_loc[1])
 
                 # Travel distance is too far
                 else:

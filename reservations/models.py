@@ -1,7 +1,5 @@
 from __future__ import unicode_literals
 from datetime import datetime
-from geopy.distance import vincenty
-from geopy.geocoders import Nominatim
 
 from django.conf import settings
 from django.db import models
@@ -9,8 +7,9 @@ from django.db.models import Q
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
 
-# from accounts.models import Driver
 from core.models import TimeStampedModel
+from core.utils import (address_from_query, coordinates_from_query,
+                        travel_distance, verbose_address)
 
 # Create your models here.
 
@@ -24,7 +23,7 @@ class ReservationManager(models.Manager):
         return super(ReservationManager, self).get_queryset() \
             .filter(Q(reservation_status=Reservation.PENDING) |
                     Q(reservation_status=Reservation.SELECT),
-                    pick_up_interval__gte=datetime.now()) \
+                    pick_up_interval__gte=datetime.now().time()) \
             .select_related('user')
 
     def own_user(self, user):
@@ -62,7 +61,6 @@ class Reservation(TimeStampedModel):
     reservation_status = models.IntegerField(
         choices=RESERVATION_STATUSES, default=PENDING)
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
-    # driver = models.ForeignKey(Driver, null=True, blank=True)
     driver = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True,
                                related_name='driver')
     pending_drivers = models.ManyToManyField(settings.AUTH_USER_MODEL,
@@ -120,58 +118,41 @@ class Reservation(TimeStampedModel):
         """
         Returns the address corresponding to a set of coordinates.
         """
-        geolocator = Nominatim()
-        cord_pair = "{}, {}".format(self.start_lat, self.start_long)
-        location = geolocator.reverse(cord_pair)
-        return location.address
-        # Returns {'place_id': '9167009604', 'type': 'attraction', ...}
-        # return location.raw
+        return verbose_address(query=self.start_lat, longitude=self.start_long)
 
     @cached_property
     def address_from_query(self):
         """
-        Returns the address of a query.
+        Returns the address of the destination query.
         """
-        geolocator = Nominatim()
-        location = geolocator.geocode(self.destination_query, timeout=60)
-        return location.address
+        return address_from_query(query=self.destination_query)
 
     @cached_property
     def start_address(self):
         """
         Returns the address of the starting location.
         """
-        geolocator = Nominatim()
         if self.start_lat and self.start_long:
-            cord_pair = "{}, {}".format(self.start_lat, self.start_long)
-            location = geolocator.reverse(cord_pair)
-            location = location.address
+            location = google_maps.search(
+                lat=self.start_lat, lng=self.start_long).first()
         else:
-            location = geolocator.geocode(self.start_query, timeout=60)
-            location = location.address
+            location = google_maps.search(location=self.start_query)
         return location
 
     @cached_property
     def coordinates_from_query(self):
         """
-        Returns the coordinates of a query (latitude, longitude).
+        Returns the coordinates for the destination query.
         """
-        geolocator = Nominatim()
-        location = geolocator.geocode(self.destination_query, timeout=60)
-        return (location.latitude, location.longitude)
+        return coordinates_from_query(query=self.destination_query)
 
-    def dist_between_user_driver(self):
-        """
-        Returns the distance between the user and the driver.
-        """
-        user_loc = (self.start_lat, self.start_long)
-        driver_loc = (self.end_lat, self.end_long)
-        return vincenty(user_loc, driver_loc).miles
-
+    @cached_property
     def travel_distance(self):
         """
         Returns the total travel distance for the request.
         """
-        start_loc = (self.start_lat, self.start_long)
-        end_loc = (self.end_lat, self.end_long)
-        return "{:.2f} miles".format(vincenty(start_loc, end_loc).miles)
+        return travel_distance(start_lat=self.start_lat,
+                               start_lng=self.start_long,
+                               end_lat=self.end_lat,
+                               end_lng=self.end_long,
+                               validator=False)

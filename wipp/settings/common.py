@@ -6,6 +6,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 MAX_MILE_DISTANCE = 200  # Maximum distance a trip can be in miles
+GOOGLE_MAPS_KEY = 'AIzaSyBhEV3CVeYPNWqvUSAyogC1bWDabxrNqC4'
 
 
 # HOSTING + AUTHENTICATION
@@ -48,7 +49,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'corsheaders',
     'crispy_forms',
-    'geopy',
     'rest_framework',
     'accounts',
     'api',
