@@ -122,8 +122,8 @@ class RegisterForm(forms.Form):
         email = self.cleaned_data.get('email').lower()
         if MyUser.objects.filter(
                 Q(email=email) & ~Q(id=self.user.id)).exists():
-            raise forms.ValidationError("This email is already taken. \
-                                        Please try a different one.")
+            raise forms.ValidationError("This email is already taken. "
+                                        "Please try a different one.")
         # Use for .edu emails
         username, domain = email.split('@')
         if not domain.endswith('.edu'):
@@ -189,8 +189,8 @@ class AccountBasicsChangeForm(forms.ModelForm):
         email = self.cleaned_data.get('email').lower()
         if MyUser.objects.filter(
                 Q(email=email) & ~Q(id=self.user.id)).exists():
-            raise forms.ValidationError("This email is already taken. \
-                                        Please try a different one.")
+            raise forms.ValidationError("This email is already taken. "
+                                        "Please try a different one.")
         # Use for .edu emails
         username, domain = email.split('@')
         if not domain.endswith('.edu'):

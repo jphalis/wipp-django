@@ -66,11 +66,11 @@ def password_reset(request, from_email=settings.FROM_EMAIL,
                 }
                 form.save(**opts)
                 messages.success(request,
-                                 "If that email is registered to an account, \
-                                 instructions for resetting your password \
-                                 will be sent soon. Please make sure to check \
-                                 your junk email/spam folder if you do not \
-                                 receive an email.")
+                                 "If that email is registered to an account, "
+                                 "instructions for resetting your password "
+                                 "will be sent soon. Please make sure to check "
+                                 "your junk email/spam folder if you do not "
+                                 "receive an email.")
         else:
             form = password_reset_form()
         return render(request, template_name, {'form': form})
