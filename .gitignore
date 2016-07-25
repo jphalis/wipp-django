@@ -8,7 +8,6 @@ __pycache__/
 *.so
 
 # Extra files
-dev.py
 sensitive_data.py
 static/media/
 static_full/media/

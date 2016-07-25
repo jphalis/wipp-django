@@ -15,6 +15,7 @@ from rest_framework.viewsets import ModelViewSet
 from accounts.models import Driver, MyUser
 from core.mixins import AdminRequiredMixin, CacheMixin
 from core.utils import coordinates_from_query, travel_distance
+from push_notifications.models import APNSDevice
 from reservations.models import Reservation
 from .account_serializers import (AccountCreateSerializer, DriverSerializer,
                                   DriverCreateSerializer, MyUserSerializer)
@@ -358,6 +359,19 @@ def reservation_accept_api(request, reservation_id):
     reservation.pending_drivers.add(request.user)
     reservation.reservation_status = Reservation.SELECT
     reservation.save()
+
+    # Push notifications
+    try:
+        device = APNSDevice.objects.get(user=reservation.user)
+    except APNSDevice.DoesNotExist:
+        device = None
+
+    if device:
+        device.send_message(
+            "{0} is interested in your ride request.".format(
+                request.user.full_name)
+        )
+
     serializer = ReservationSerializer(reservation,
                                        context={'request': request})
     return RestResponse(serializer.data, status=status.HTTP_201_CREATED)

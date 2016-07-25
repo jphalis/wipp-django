@@ -47,6 +47,20 @@ INSTALLED_APPS += (
 )
 
 
+# P U S H  N O T I F I C A T I O N S
+PUSH_NOTIFICATIONS_SETTINGS = {
+    # "GCM_API_KEY": "<your api key>",
+    # "GCM_POST_URL": "https://android.googleapis.com/gcm/send",
+    # "GCM_MAX_RECIPIENTS": 1000,
+    "APNS_HOST": "gateway.push.apple.com",
+    "APNS_CERTIFICATE": os.path.join(os.path.dirname(BASE_DIR),
+                                     'push_notifications',
+                                     'certificates',
+                                     'apns_prod.pem'),
+    # "APNS_PORT": 2195
+}
+
+
 # D A T A B A S E
 DATABASES = {
     'default': {  # get credentials from Heroku database creation
