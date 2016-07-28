@@ -39,18 +39,6 @@ INSTALLED_APPS += (
     # 'phonenumber_field',
 )
 
-PUSH_NOTIFICATIONS_SETTINGS = {
-    # "GCM_API_KEY": "<your api key>",
-    # "GCM_POST_URL": "https://android.googleapis.com/gcm/send",
-    # "GCM_MAX_RECIPIENTS": 1000,
-    "APNS_HOST": "gateway.sandbox.push.apple.com",
-    "APNS_CERTIFICATE": os.path.join(os.path.dirname(BASE_DIR),
-                                     'push_notifications',
-                                     'certificates',
-                                     'apns_dev.pem'),
-    # "APNS_PORT": 2195
-}
-
 
 # D A T A B A S E
 DATABASES = {

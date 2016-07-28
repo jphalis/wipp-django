@@ -133,10 +133,10 @@ class Reservation(TimeStampedModel):
         Returns the address of the starting location.
         """
         if self.start_lat and self.start_long:
-            location = google_maps.search(
-                lat=self.start_lat, lng=self.start_long).first()
+            location = verbose_address(
+                latitude=self.start_lat, longitude=self.start_long)
         else:
-            location = google_maps.search(location=self.start_query)
+            location = address_from_query(query=self.start_query)
         return location
 
     @cached_property
