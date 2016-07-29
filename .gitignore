@@ -9,6 +9,7 @@ __pycache__/
 
 # Extra files
 sensitive_data.py
+dev.py
 static/media/
 static_full/media/
 .DS_Store
