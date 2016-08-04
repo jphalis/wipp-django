@@ -297,8 +297,20 @@ class ReservationListAPIView(CacheMixin, DefaultsMixin, FiltersMixin,
         if driver_res:
             queryset = Reservation.objects.own_driver(user)
         else:
-            queryset = Reservation.objects.pending().select_related(
-                'user', 'driver')
+            try:
+                user_res = Reservation.objects.get(
+                    Q(user=user) &
+                    Q(reservation_status=Reservation.PENDING) |
+                    Q(reservation_status=Reservation.NEGOTIATING) |
+                    Q(reservation_status=Reservation.SELECT)
+                )
+            except:
+                user_res = None
+
+            if user_res:
+                queryset = Reservation.objects.own_user()
+            else:
+                queryset = Reservation.objects.pending()
 
         return queryset
 
