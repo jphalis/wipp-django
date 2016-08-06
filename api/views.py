@@ -308,7 +308,7 @@ class ReservationListAPIView(CacheMixin, DefaultsMixin, FiltersMixin,
                 user_res = None
 
             if user_res:
-                queryset = Reservation.objects.own_user()
+                queryset = Reservation.objects.own_user(user)
             else:
                 queryset = Reservation.objects.pending()
 
